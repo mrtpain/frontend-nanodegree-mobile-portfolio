@@ -508,8 +508,8 @@ function updatePositions() {
 
   var items = document.querySelectorAll('.mover');
   // TJP *** Placed scrollTopMath in variable preventing calculation multiple times in the for loop.
+  // TJP *** Pizza Stuff holds an array of the possible pizza scroll values
   var scrollTopMath = document.body.scrollTop / 1250;
-  
   var pizzaStuff = new Array();
 
   for (var i = 0; i < getNumPizzas(); i++) {
@@ -520,7 +520,6 @@ function updatePositions() {
   for (var i = 0; i < items.length; i++) {
     //var phase = Math.sin((scrollTopMath) + (i % 5));
     items[i].style.left = items[i].basicLeft + 100 * pizzaStuff[i] + 'px';
-    //console.log(phase);
   }
 
   // User Timing API to the rescue again. Seriously, it's worth learning.
@@ -572,7 +571,6 @@ document.addEventListener('DOMContentLoaded', function() {
     //elem.style.height = "100px";
     //elem.style.width = "73.333px";
     elem.basicLeft = (i % cols) * s;
-    console.log(elem.basicLeft);
     elem.style.top = (Math.floor(i / cols) * s) + 'px';
     document.querySelector("#movingPizzas1").appendChild(elem);
   }
