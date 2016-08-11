@@ -556,7 +556,10 @@ function getNumPizzas() {
 }
 
 // runs updatePositions on scroll
-window.addEventListener('scroll', updatePositions);
+// TJP *** Added requestAnimationFrame
+window.addEventListener('scroll', function () {
+   requestAnimationFrame(updatePositions);
+});
 
 // Generates the sliding pizzas when the page loads.
 document.addEventListener('DOMContentLoaded', function() {
