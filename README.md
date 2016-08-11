@@ -24,7 +24,7 @@ Navigate to the folder named **Views** to see the pizzeria html, styles, and scr
 
 * **CSS** holds the pizzeria's style sheets
 * **JS** holds the pizzeria's JavaScript files
-* **Images*8 holds pizzeria images
+* **Images** holds pizzeria images
 * **pizza.html** is used to view the web page
 
 ### Modifications and Updates to the Pizzeria
