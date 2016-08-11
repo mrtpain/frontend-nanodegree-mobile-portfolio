@@ -511,9 +511,10 @@ function updatePositions() {
   // TJP *** Pizza Stuff holds an array of the possible pizza scroll values
   var scrollTopMath = document.body.scrollTop / 1250;
   var pizzaStuff = new Array();
+  var phase;
 
   for (var i = 0; i < getNumPizzas(); i++) {
-    var phase = Math.sin((scrollTopMath) + (i % 5));
+    phase = Math.sin((scrollTopMath) + (i % 5));
     pizzaStuff.push(phase);
   }
 
@@ -532,12 +533,13 @@ function updatePositions() {
   }
 }
 
-// TJP *** Gets the intial positioning of each pizza element on body load
+// TJP *** Gets the initial positioning of each pizza element on body load
 // TJP *** Eases loaded time by not checking for document.body.scrollTop
 function initialPositions() {
   var items = document.getElementsByClassName('mover');
+  var phase;
   for (var i = 0; i < items.length; i++) {
-    var phase = Math.sin(i % 5);
+    phase = Math.sin(i % 5);
     items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
   }
 }
@@ -562,9 +564,10 @@ window.addEventListener('scroll', function () {
 
 // Generates the sliding pizzas when the page loads.
 document.addEventListener('DOMContentLoaded', function() {
-  // TJP *** Using the getNumPizzas(); function, minimalizes the number of pizzas rendered.
+  // TJP *** Using the getNumPizzas(); function, adjusts the number of pizzas rendered.
+  var elem;
   for (var i = 0; i < getNumPizzas(); i++) {
-    var elem = document.createElement('img');
+    elem = document.createElement('img');
     elem.className = 'mover';
     elem.src = "images/pizza.png";
     // TJP *** Removed these and added them to css files
