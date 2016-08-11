@@ -509,9 +509,18 @@ function updatePositions() {
   var items = document.querySelectorAll('.mover');
   // TJP *** Placed scrollTopMath in variable preventing calculation multiple times in the for loop.
   var scrollTopMath = document.body.scrollTop / 1250;
-  for (var i = 0; i < items.length; i++) {
+  
+  var pizzaStuff = new Array();
+
+  for (var i = 0; i < getNumPizzas(); i++) {
     var phase = Math.sin((scrollTopMath) + (i % 5));
-    items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
+    pizzaStuff.push(phase);
+  }
+
+  for (var i = 0; i < items.length; i++) {
+    //var phase = Math.sin((scrollTopMath) + (i % 5));
+    items[i].style.left = items[i].basicLeft + 100 * pizzaStuff[i] + 'px';
+    //console.log(phase);
   }
 
   // User Timing API to the rescue again. Seriously, it's worth learning.
@@ -534,24 +543,23 @@ function initialPositions() {
   }
 }
 
+// TJP *** Calls function to get the minimal number of pizzas necessary for background
+// TJP *** Gets the screen height, divides that by the row size (s) and rounds up a row.
+// TJP *** Then multiplies the number of rows by the number of columns.
+var cols = 8;
+var s = 256;
+function getNumPizzas() {
+  var screenHeight = screen.height;
+  var rows = Math.ceil(screenHeight / s);
+  var numPizzas = rows * cols;
+  return numPizzas    
+}
+
 // runs updatePositions on scroll
 window.addEventListener('scroll', updatePositions);
 
 // Generates the sliding pizzas when the page loads.
 document.addEventListener('DOMContentLoaded', function() {
-  var cols = 8;
-  var s = 256;
-
-  // TJP *** Calls function to get the minimal number of pizzas necessary for background
-  // TJP *** Gets the screen height, divides that by the row size (s) and rounds up a row.
-  // TJP *** Then multiplies the number of rows by the number of columns.
-  function getNumPizzas() {
-    var screenHeight = screen.height;
-    var rows = Math.ceil(screenHeight / s);
-    var numPizzas = rows * cols;
-    return numPizzas    
-  }
-
   // TJP *** Using the getNumPizzas(); function, minimalizes the number of pizzas rendered.
   for (var i = 0; i < getNumPizzas(); i++) {
     var elem = document.createElement('img');
