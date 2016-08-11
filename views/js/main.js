@@ -448,11 +448,16 @@ var resizePizzas = function(size) {
   }
 
   // Iterates through pizza elements on the page and changes their widths
+  // TJP *** Query allPizzas one time at the beginning of the function
+  // TJP *** Declare the dx variable by using one pizza instead of all of them
+  // TJP *** Grab the new width of one pizza
+  // TJP *** Loop through all pizzas and apply new width
   function changePizzaSizes(size) {
-    for (var i = 0; i < document.querySelectorAll(".randomPizzaContainer").length; i++) {
-      var dx = determineDx(document.querySelectorAll(".randomPizzaContainer")[i], size);
-      var newwidth = (document.querySelectorAll(".randomPizzaContainer")[i].offsetWidth + dx) + 'px';
-      document.querySelectorAll(".randomPizzaContainer")[i].style.width = newwidth;
+    var allPizzas = document.querySelectorAll(".randomPizzaContainer");
+    var dx = determineDx(allPizzas[0], size);
+    var newwidth = (allPizzas[0].offsetWidth + dx) + 'px';
+    for (var i = 0; i < allPizzas.length; i++) {
+      allPizzas[i].style.width = newwidth;
     }
   }
 
@@ -502,8 +507,10 @@ function updatePositions() {
   window.performance.mark("mark_start_frame");
 
   var items = document.querySelectorAll('.mover');
+  // TJP *** Placed scrollTopMath in variable preventing calculation multiple times in the for loop.
+  var scrollTopMath = document.body.scrollTop / 1250;
   for (var i = 0; i < items.length; i++) {
-    var phase = Math.sin((document.body.scrollTop / 1250) + (i % 5));
+    var phase = Math.sin((scrollTopMath) + (i % 5));
     items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
   }
 
@@ -517,6 +524,16 @@ function updatePositions() {
   }
 }
 
+// TJP *** Gets the intial positioning of each pizza element on body load
+// TJP *** Eases loaded time by not checking for document.body.scrollTop
+function initialPositions() {
+  var items = document.querySelectorAll('.mover');
+  for (var i = 0; i < items.length; i++) {
+    var phase = Math.sin(i % 5);
+    items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
+  }
+}
+
 // runs updatePositions on scroll
 window.addEventListener('scroll', updatePositions);
 
@@ -524,15 +541,31 @@ window.addEventListener('scroll', updatePositions);
 document.addEventListener('DOMContentLoaded', function() {
   var cols = 8;
   var s = 256;
-  for (var i = 0; i < 200; i++) {
+
+  // TJP *** Calls function to get the minimal number of pizzas necessary for background
+  // TJP *** Gets the screen height, divides that by the row size (s) and rounds up a row.
+  // TJP *** Then multiplies the number of rows by the number of columns.
+  function getNumPizzas() {
+    var screenHeight = screen.height;
+    var rows = Math.ceil(screenHeight / s);
+    var numPizzas = rows * cols;
+    return numPizzas    
+  }
+
+  // TJP *** Using the getNumPizzas(); function, minimalizes the number of pizzas rendered.
+  for (var i = 0; i < getNumPizzas(); i++) {
     var elem = document.createElement('img');
     elem.className = 'mover';
     elem.src = "images/pizza.png";
-    elem.style.height = "100px";
-    elem.style.width = "73.333px";
+    // TJP *** Removed these and added them to css files
+    //elem.style.height = "100px";
+    //elem.style.width = "73.333px";
     elem.basicLeft = (i % cols) * s;
+    console.log(elem.basicLeft);
     elem.style.top = (Math.floor(i / cols) * s) + 'px';
     document.querySelector("#movingPizzas1").appendChild(elem);
   }
-  updatePositions();
+
+  // TJP *** Calls initial position function on load rather than update function.
+  initialPositions();
 });
