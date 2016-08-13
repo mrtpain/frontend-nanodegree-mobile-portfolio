@@ -473,8 +473,8 @@ var resizePizzas = function(size) {
 window.performance.mark("mark_start_generating"); // collect timing data
 
 // This for-loop actually creates and appends all of the pizzas when the page loads
-for (var i = 2; i < 100; i++) {
-  var pizzasDiv = document.getElementById("randomPizzas");
+var pizzasDiv = document.getElementById("randomPizzas");
+for (i = 2; i < 100; i++) {
   pizzasDiv.appendChild(pizzaElementGenerator(i));
 }
 
@@ -506,21 +506,14 @@ function updatePositions() {
   frame++;
   window.performance.mark("mark_start_frame");
 
-  var items = document.getElementsByClassName('mover');
   // TJP *** Placed scrollTopMath in variable preventing calculation multiple times in the for loop.
   // TJP *** Pizza Stuff holds an array of the possible pizza scroll values
   var scrollTopMath = document.body.scrollTop / 1250;
-  var pizzaStuff = new Array();
   var phase;
 
-  for (var i = 0; i < getNumPizzas(); i++) {
-    phase = Math.sin((scrollTopMath) + (i % 5));
-    pizzaStuff.push(phase);
-  }
-
-  for (var i = 0; i < items.length; i++) {
-    //var phase = Math.sin((scrollTopMath) + (i % 5));
-    items[i].style.left = items[i].basicLeft + 100 * pizzaStuff[i] + 'px';
+  for (i = 0; i < $pizza.length; i++) {
+    phase = Math.sin((scrollTopMath) + $pizza[i].remainder);
+    $pizza[i].style.left = $pizza[i].basicLeft + 100 * phase + 'px';
   }
 
   // User Timing API to the rescue again. Seriously, it's worth learning.
@@ -533,22 +526,13 @@ function updatePositions() {
   }
 }
 
-// TJP *** Gets the initial positioning of each pizza element on body load
-// TJP *** Eases loaded time by not checking for document.body.scrollTop
-function initialPositions() {
-  var items = document.getElementsByClassName('mover');
-  var phase;
-  for (var i = 0; i < items.length; i++) {
-    phase = Math.sin(i % 5);
-    items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
-  }
-}
-
 // TJP *** Calls function to get the minimal number of pizzas necessary for background
 // TJP *** Gets the screen height, divides that by the row size (s) and rounds up a row.
 // TJP *** Then multiplies the number of rows by the number of columns.
+// TJP *** $pizza holds array of all pizzas
 var cols = 8;
 var s = 256;
+var $pizza = [];
 function getNumPizzas() {
   var screenHeight = screen.height;
   var rows = Math.ceil(screenHeight / s);
@@ -566,18 +550,16 @@ window.addEventListener('scroll', function () {
 document.addEventListener('DOMContentLoaded', function() {
   // TJP *** Using the getNumPizzas(); function, adjusts the number of pizzas rendered.
   var elem;
-  for (var i = 0; i < getNumPizzas(); i++) {
+  for (i = 0; i < getNumPizzas(); i++) {
     elem = document.createElement('img');
     elem.className = 'mover';
     elem.src = "images/pizza.png";
-    // TJP *** Removed these and added them to css files
-    //elem.style.height = "100px";
-    //elem.style.width = "73.333px";
+    elem.remainder = i % 5;
     elem.basicLeft = (i % cols) * s;
     elem.style.top = (Math.floor(i / cols) * s) + 'px';
     document.getElementById("movingPizzas1").appendChild(elem);
+    $pizza.push(elem);
   }
-
-  // TJP *** Calls initial position function on load rather than update function.
-  initialPositions();
+  
+  updatePositions();
 });
